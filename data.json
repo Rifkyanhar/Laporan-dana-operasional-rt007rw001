@@ -35,6 +35,24 @@
           "harga": 5000
         }
       ]
+    },
+    {
+      "id": "tx_1783187209239",
+      "tanggal": "2026-07-05",
+      "jenis": "keluar",
+      "kategori": "Kegiatan Sosial",
+      "keterangan": "Kerja bakti",
+      "jumlah": 300000,
+      "dicatatOleh": "Bendahara",
+      "createdAt": 1783187209239,
+      "rincian": [
+        {
+          "nama": "Pembelian Jamuan",
+          "qty": 300,
+          "satuan": "buah",
+          "harga": 1000
+        }
+      ]
     }
   ]
 }
