@@ -11,6 +11,30 @@
       "dicatatOleh": "Anis",
       "createdAt": 1783184537396,
       "rincian": []
+    },
+    {
+      "id": "tx_1783184965379",
+      "tanggal": "2026-07-04",
+      "jenis": "keluar",
+      "kategori": "Kebersihan Lingkungan",
+      "keterangan": "Pembersihan Saluran Got",
+      "jumlah": 700000,
+      "dicatatOleh": "Anis",
+      "createdAt": 1783184965379,
+      "rincian": [
+        {
+          "nama": "Ember",
+          "qty": 20,
+          "satuan": "buah",
+          "harga": 25000
+        },
+        {
+          "nama": "Karung",
+          "qty": 40,
+          "satuan": "buah",
+          "harga": 5000
+        }
+      ]
     }
   ]
 }
