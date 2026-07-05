@@ -68,23 +68,23 @@
 
   <div id="app">
     <div class="card">
-      <h2>Pengaturan Repository GitHub</h2>
-      <p class="hint">Isi sekali saja. Token disimpan hanya di browser ini (opsional), tidak dikirim ke mana pun selain ke GitHub.</p>
+      <h2>Pengaturan Penyimpanan Data</h2>
+      <p class="hint">Isi sekali saja. Data ini tersimpan hanya di perangkat ini.</p>
       <div class="row">
         <div>
-          <label>Username / Organisasi</label>
+          <label>Kode Akun</label>
           <input id="ghOwner" placeholder="mis: rt07rw01semarang">
         </div>
         <div>
-          <label>Nama Repository</label>
+          <label>Nama Folder Data</label>
           <input id="ghRepo" placeholder="mis: laporan-kas-rt07">
         </div>
       </div>
-      <label>Personal Access Token (fine-grained, scope: Contents Read & Write)</label>
-      <input id="ghToken" type="password" placeholder="github_pat_...">
+      <label>Kunci Akses</label>
+      <input id="ghToken" type="password" placeholder="Masukkan kunci akses">
       <div class="checkbox-row">
         <input type="checkbox" id="rememberToken">
-        <label for="rememberToken">Ingat pengaturan ini di browser ini (tidak disarankan di HP bersama)</label>
+        <label for="rememberToken">Ingat pengaturan ini di perangkat ini (tidak disarankan di HP bersama)</label>
       </div>
       <button class="secondary" onclick="saveSettings()">Simpan Pengaturan</button>
     </div>
@@ -119,11 +119,11 @@
 
       <label>Dicatat oleh</label>
       <input id="dicatatOleh" placeholder="Nama bendahara">
-      <button class="primary" id="submitBtn" onclick="submitTransaksi()">Simpan &amp; Publikasikan ke GitHub</button>
+      <button class="primary" id="submitBtn" onclick="submitTransaksi()">Simpan &amp; Publikasikan</button>
     </div>
 
     <div class="card">
-      <h2>Riwayat (dari data.json saat ini)</h2>
+      <h2>Riwayat Transaksi</h2>
       <div id="riwayat" class="hint">Memuat…</div>
     </div>
   </div>
@@ -244,14 +244,14 @@ async function fetchCurrentData(){
   const cfg = ghConfig();
   const riwayatEl = document.getElementById("riwayat");
   if(!cfg.owner || !cfg.repo || !cfg.token){
-    riwayatEl.textContent = "Isi pengaturan repository GitHub di atas dulu.";
+    riwayatEl.textContent = "Isi pengaturan penyimpanan data di atas dulu.";
     return;
   }
   try{
     const res = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`, {
       headers: { Authorization: `token ${cfg.token}`, Accept: "application/vnd.github+json" }
     });
-    if(!res.ok) throw new Error(`GitHub API error ${res.status}. Cek owner/repo/token.`);
+    if(!res.ok) throw new Error(`Gagal terhubung (kode ${res.status}). Periksa kembali pengaturan.`);
     const json = await res.json();
     currentSha = json.sha;
     currentData = JSON.parse(b64_to_utf8(json.content.replace(/\n/g,"")));
@@ -272,7 +272,7 @@ function renderRiwayat(){
 
 async function commitToGithub(newData, message){
   const cfg = ghConfig();
-  if(!cfg.owner || !cfg.repo || !cfg.token) throw new Error("Lengkapi pengaturan repository GitHub dulu.");
+  if(!cfg.owner || !cfg.repo || !cfg.token) throw new Error("Lengkapi pengaturan penyimpanan data dulu.");
   const content = utf8_to_b64(JSON.stringify(newData, null, 2));
   const body = { message, content, sha: currentSha };
   const res = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`, {
@@ -294,7 +294,7 @@ async function updateSaldoAwal(){
     const val = Number(document.getElementById("saldoAwalInput").value) || 0;
     const newData = { ...currentData, saldoAwal: val };
     await commitToGithub(newData, `Update saldo awal ke Rp ${val.toLocaleString("id-ID")}`);
-    alert("Saldo awal berhasil diperbarui di GitHub.");
+    alert("Saldo awal berhasil diperbarui.");
   }catch(e){
     alert("Gagal: " + e.message);
   }
@@ -337,7 +337,7 @@ async function submitTransaksi(){
     msgEl.innerHTML = `<div class="msg error">Gagal: ${e.message}</div>`;
   }finally{
     btn.disabled = false;
-    btn.textContent = "Simpan & Publikasikan ke GitHub";
+    btn.textContent = "Simpan & Publikasikan";
   }
 }
 </script>
